@@ -51,36 +51,34 @@ def plot_history(hist):
     plt.show()
 
 
+def get_subset(images, labels, fraction):
+
+    out_length = int(round(len(labels) * fraction))
+
+    images_subset = images[:out_length]
+    labels_subset = labels[:out_length]
+
+    return images_subset, labels_subset
+
+
 def main():
 
     # Load the fashion-mnist pre-shuffled train data and test data
-    (x_train, y_train), (x_test, y_test) = fashion_mnist.load_data()
+    (images_train, labels_train), (images_test, labels_test) = fashion_mnist.load_data()
 
-    # Prepare datasets
-    # This step contains normalization and reshaping of input.
-    # For output, it is important to change number to one-hot vector.
-    set_fraction = 0.25
-    train_len = int(round(len(x_train) * set_fraction))
-    test_len = int(round(len(x_train) * set_fraction))
-    x_train = x_train[:train_len]
-    y_train = y_train[:train_len]
-    x_test = x_test[:test_len]
-    
-    x_train = x_train.astype('float32') / 255
-    x_train = x_train.reshape(x_train.shape[0], 28, 28, 1)
-    x_test = x_test.astype('float32') / 255
-    x_test = x_test.reshape(x_test.shape[0], 28, 28, 1)
-    y_train = utils.to_categorical(y_train, 10)
-    y_test = utils.to_categorical(y_test, 10)
+    # Choose a subset of the entire dataset
+    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.25)
+    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.25)
 
-    # Split train data to train and validation data
-    train_fraction = 0.8
-    train_len = int(round(len(x_train) * train_fraction))
-
-    images_train = x_train[:train_len]
-    images_validation = x_train[train_len:]
-    labels_train = y_train[:train_len]
-    labels_validation = y_train[train_len:]
+    # Prepare datasets 
+    # normalize and reshape input images
+    images_train = images_train.astype('float32') / 255
+    images_train = images_train.reshape(images_train.shape[0], 28, 28, 1)
+    images_test = images_test.astype('float32') / 255
+    images_test = images_test.reshape(images_test.shape[0], 28, 28, 1)
+    # change label numbers to one-hot vector
+    labels_train = utils.to_categorical(labels_train, 10)
+    labels_test = utils.to_categorical(labels_test, 10)
 
     model = neural_network_model(out_labels=10)
     optimizer = Adam(lr=0.001)
@@ -90,12 +88,12 @@ def main():
                         labels_train,
                         batch_size=32,
                         epochs=60,
-                        validation_data=(images_validation, labels_validation),
-                        verbose=2
+                        validation_split=0.2,
+                        verbose=1
                         )
 
-    # Evaluate the model on test set
-    score = model.evaluate(x_test, y_test, verbose=0)
+    # Evaluate the model on the test set
+    score = model.evaluate(images_test, labels_test, verbose=0)
 
     # Print test accuracy
     print('\n', 'Test accuracy:', score[1])
