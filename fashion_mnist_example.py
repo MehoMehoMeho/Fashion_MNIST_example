@@ -18,14 +18,14 @@ def neural_network_model(out_labels=10):
     model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
     model.add(layers.MaxPooling2D((2, 2), strides=2))
 
-    # model.add(Conv2D(64, (3, 3), activation='relu'))
-    # model.add(MaxPooling2D((2, 2), strides=2))
+    # model.add(layers.Conv2D(64, (3, 3), activation='relu'))
+    # model.add(layers.MaxPooling2D((2, 2), strides=2))
 
     model.add(layers.Flatten())
     model.add(layers.Dense(64, activation='relu'))
-    model.add(layers.Dropout(0.35))
-    # model.add(Dense(256, activation='relu'))
-    # model.add(Dropout(0.35))
+    # model.add(layers.Dropout(0.4))
+    # model.add(layers.Dense(256, activation='relu'))
+    # model.add(layers.Dropout(0.35))
     model.add(layers.Dense(out_labels, activation='softmax'))
 
     return model
@@ -67,8 +67,8 @@ def main():
     (images_train, labels_train), (images_test, labels_test) = fashion_mnist.load_data()
 
     # Choose a subset of the entire dataset
-    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.25)
-    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.25)
+    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.2)
+    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.2)
 
     # Prepare datasets 
     # normalize and reshape input images
@@ -80,6 +80,7 @@ def main():
     labels_train = utils.to_categorical(labels_train, 10)
     labels_test = utils.to_categorical(labels_test, 10)
 
+    # initialize a CNN model
     model = neural_network_model(out_labels=10)
     optimizer = Adam(lr=0.001)
     model.compile(loss='categorical_crossentropy', optimizer=optimizer, metrics=['accuracy'])
