@@ -18,13 +18,10 @@ def neural_network_model(out_labels=10):
     model.add(layers.Conv2D(32, (3, 3), padding='same', activation='relu'))
     model.add(layers.MaxPooling2D((2, 2), strides=2))
 
-    # model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-    # model.add(layers.MaxPooling2D((2, 2), strides=2))
-
     model.add(layers.Flatten())
     model.add(layers.Dense(64, activation='relu'))
     model.add(layers.Dropout(0.4))
-    
+
     model.add(layers.Dense(out_labels, activation='softmax'))
 
     return model
@@ -86,14 +83,14 @@ def main():
 
     history = model.fit(images_train,
                         labels_train,
-                        batch_size=32,
+                        batch_size=256,
                         epochs=10,
                         validation_split=0.2,
                         verbose=1
                         )
 
     # Evaluate the model on the test set
-    score = model.evaluate(images_test, labels_test, verbose=0)
+    score = model.evaluate(images_test, labels_test, verbose=2)
 
     # Print test accuracy
     print('\n', 'Test accuracy:', score[1])
