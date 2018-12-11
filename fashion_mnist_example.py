@@ -63,8 +63,8 @@ def main():
     (images_train, labels_train), (images_test, labels_test) = fashion_mnist.load_data()
 
     # Choose a subset of the entire dataset
-    images_train, labels_train = get_subset(images_train, labels_train, fraction=1)
-    images_test, labels_test = get_subset(images_test, labels_test, fraction=1)
+    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.25)
+    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.25)
 
     # Prepare datasets 
     # normalize and reshape input images
@@ -84,7 +84,7 @@ def main():
     history = model.fit(images_train,
                         labels_train,
                         batch_size=256,
-                        epochs=100,
+                        epochs=40,
                         validation_split=0.2,
                         verbose=2
                         )
