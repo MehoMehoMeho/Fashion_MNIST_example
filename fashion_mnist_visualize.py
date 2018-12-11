@@ -4,11 +4,8 @@ import matplotlib.pyplot as plt
 from tensorflow.keras.datasets import fashion_mnist
 
 
-def explore_dataset():
-
-    # Load the fashion-mnist pre-shuffled train data and test data
-    (images_train, labels_train), _ = fashion_mnist.load_data()
-
+def visualize_classes(images, labels, predictions=None):
+        
     # fashion mnist label name
     fashion_mnist_labels = np.array([
         'T-shirt/top',
@@ -22,9 +19,6 @@ def explore_dataset():
         'Bag',
         'Ankle boot'])
 
-    images = images_train[:49].copy()
-    labels = labels_train[:49].copy()
-
     plt.figure(figsize=(12, 12))
 
     for ind, (image, label) in enumerate(zip(images, labels)):
@@ -35,14 +29,23 @@ def explore_dataset():
 
         predicted_class = label
 
-        if label == predicted_class:
-            plt.title(fashion_mnist_labels[predicted_class])
-        else:
-            plt.title(fashion_mnist_labels[predicted_class] + "!=" + fashion_mnist_labels[label], color='red')
+        plt.title(fashion_mnist_labels[label])
 
     plt.tight_layout()
     plt.show()
 
 
+def main():
+    # Load the fashion-mnist pre-shuffled train data and test data
+    (images_train, labels_train), _ = fashion_mnist.load_data()
+
+    print(images_train.shape)
+
+    images = images_train[:49]
+    labels = labels_train[:49]
+
+    visualize_classes(images, labels)
+
+
 if __name__ == "__main__":
-    explore_dataset()
+    main()

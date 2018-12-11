@@ -23,9 +23,8 @@ def neural_network_model(out_labels=10):
 
     model.add(layers.Flatten())
     model.add(layers.Dense(64, activation='relu'))
-    # model.add(layers.Dropout(0.4))
-    # model.add(layers.Dense(256, activation='relu'))
-    # model.add(layers.Dropout(0.35))
+    model.add(layers.Dropout(0.4))
+    
     model.add(layers.Dense(out_labels, activation='softmax'))
 
     return model
@@ -67,8 +66,8 @@ def main():
     (images_train, labels_train), (images_test, labels_test) = fashion_mnist.load_data()
 
     # Choose a subset of the entire dataset
-    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.2)
-    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.2)
+    images_train, labels_train = get_subset(images_train, labels_train, fraction=0.25)
+    images_test, labels_test = get_subset(images_test, labels_test, fraction=0.25)
 
     # Prepare datasets 
     # normalize and reshape input images
@@ -88,7 +87,7 @@ def main():
     history = model.fit(images_train,
                         labels_train,
                         batch_size=32,
-                        epochs=60,
+                        epochs=10,
                         validation_split=0.2,
                         verbose=1
                         )
@@ -100,6 +99,9 @@ def main():
     print('\n', 'Test accuracy:', score[1])
 
     plot_history(history)
+
+    # Save model weights
+    model.save_weights('trained_model.h5')
 
 
 if __name__ == "__main__":
